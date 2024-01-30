@@ -3,6 +3,3 @@
 
 ### Maintability
 [![Maintainability](https://api.codeclimate.com/v1/badges/e280e4546a23d7a54338/maintainability)](https://codeclimate.com/github/zagarskih/frontend-project-11/maintainability)
-
-### Test Coverage
-[![Test Coverage](https://api.codeclimate.com/v1/badges/e280e4546a23d7a54338/test_coverage)](https://codeclimate.com/github/zagarskih/frontend-project-11/test_coverage)
