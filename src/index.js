@@ -1,4 +1,4 @@
 import './styles.scss';
 import 'bootstrap';
-
-console.log('Hello World!');
+import App from './app.js'
+App();
