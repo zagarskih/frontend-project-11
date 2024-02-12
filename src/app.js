@@ -1,9 +1,33 @@
 import validation from './validationSchema';
 import onChange from 'on-change';
 import render from './render';
+import i18next from 'i18next';
+import translationRU from './locales/ru.js';
+import * as yup from "yup";
 import axios from 'axios';
 
 export default function App() {
+  const i18nextInstance = i18next.createInstance();
+  i18nextInstance.init({
+    lng: 'ru',
+    resources: {
+      ru: {
+        translation: translationRU,
+      },
+    },
+  }).then(() => {
+    yup.setLocale({
+      string: {
+        url: 'errors.urlInvalid',
+        required: 'errors.urlRequired',
+      },
+      mixed: {
+        notOneOf: 'errors.rssExists',
+      }
+    })
+  });
+
+
   let initialState = {
     validation: true,
     links: [],
@@ -12,7 +36,7 @@ export default function App() {
     isError: false,
   };
 
-  const state = onChange(initialState, render);
+  const state = onChange(initialState, handleRender);
 
   const form = document.getElementById('urlform');
   form.addEventListener('submit', handleSubmit);
@@ -23,20 +47,21 @@ export default function App() {
     const urlInput = document.getElementById('inputAddress');
     const url = urlInput.value;
     const addedLinks = [...state.links];
-    console.log(addedLinks);
-    validation(url, addedLinks)
+    validation(url, addedLinks, i18nextInstance)
       .then(() => {
         state.links.push(url);
-        state.textError = '';
+        state.textError = 'interface.loadSuccess';
         state.validation = true;
         state.isError = false;
-        render(state);
       })
       .catch((error) => {
         state.isError = true;
         state.validation = false;
         state.textError = error.message;
-        render(state);
       });
   }
-}
+
+  function handleRender() {
+    render(state, i18nextInstance);
+  }
+};
