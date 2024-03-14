@@ -1,5 +1,4 @@
 export default (data, link) => {
-  try {
     const parser = new DOMParser();
     const xmlDoc = parser.parseFromString(data, 'application/xml');
     const titleEl = xmlDoc.getElementsByTagName('title')[0];
@@ -24,7 +23,4 @@ export default (data, link) => {
       link,
       posts,
     }
-  } catch (error){
-    throw new Error('errors.invalidRss');
-  }
 };
