@@ -7,8 +7,6 @@ import render from './render/render';
 import translationRU from './locales/ru';
 import parse from './parse';
 
-const UPDATE_INTERVAL = 5000;
-
 const validation = (url, links) => {
   const schema = yup
     .string()
@@ -58,10 +56,10 @@ const refreshFeeds = (state) => {
         state.posts = [...newPostsWithId, ...state.posts];
       });
       render(state);
-      setTimeout(() => refreshFeeds(state), UPDATE_INTERVAL);
+      setTimeout(() => refreshFeeds(state), 5000);
     });
   } else {
-    setTimeout(() => refreshFeeds(state), UPDATE_INTERVAL);
+    setTimeout(() => refreshFeeds(state), 5000);
   }
 };
 
