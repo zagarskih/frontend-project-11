@@ -1,11 +1,11 @@
 import onChange from 'on-change';
-import render from './render/render';
 import i18next from 'i18next';
-import translationRU from './locales/ru.js';
 import * as yup from 'yup';
 import { uniqueId } from 'lodash';
 import axios from 'axios';
-import parse from './parse.js';
+import render from './render/render';
+import translationRU from './locales/ru';
+import parse from './parse';
 
 const UPDATE_INTERVAL = 5000;
 
@@ -33,7 +33,7 @@ const refreshFeeds = (state) => {
   if (state?.feeds && state.feeds.length > 0) {
     const promises = state.feeds.map((feed) => {
       const url = `https://allorigins.hexlet.app/get?disableCache=true&url=${encodeURIComponent(
-        feed.link
+        feed.link,
       )}`;
       return axios.get(url, {
         timeout: 10000,
@@ -45,11 +45,11 @@ const refreshFeeds = (state) => {
     Promise.all(promises).then((responses) => {
       responses.forEach((resp, i) => {
         const data = resp.data.contents;
-        const link = state.feeds[i].link;
+        const { link } = state.feeds[i];
         const { posts } = parse(data, link);
         const oldPostsLinks = state.posts.map((post) => post.link);
         const newPosts = posts.filter(
-          (post) => !oldPostsLinks.includes(post.link)
+          (post) => !oldPostsLinks.includes(post.link),
         );
         const newPostsWithId = newPosts.map((post) => ({
           ...post,
@@ -67,7 +67,7 @@ const refreshFeeds = (state) => {
 
 const addNewFeed = (link, state) => {
   const url = `https://allorigins.hexlet.app/get?url=${encodeURIComponent(
-    link
+    link,
   )}`;
   return axios
     .get(url, {
@@ -82,7 +82,6 @@ const addNewFeed = (link, state) => {
       state.status = 'success';
       state.feeds = [feed, ...state.feeds];
       state.posts = [...posts, ...state.posts];
-      console.log(state.status);
     })
     .catch((e) => {
       state.status = 'failed';
@@ -91,16 +90,15 @@ const addNewFeed = (link, state) => {
       } else {
         state.error = e.message;
       }
-      console.log(state.status);
     });
 };
 
 export default function App() {
-  let initialState = {
+  const initialState = {
     feeds: [],
     posts: [],
     viewedPostsIds: new Set(),
-    status: 'filling', //loading, success, failed, filling
+    status: 'filling', // loading, success, failed, filling
     error: '',
     // isError: false,
     modalPostId: null,
@@ -128,9 +126,7 @@ export default function App() {
       });
     });
 
-  const state = onChange(initialState, (path) =>
-    render(state, i18nextInstance, path)
-  );
+  const state = onChange(initialState, (path) => render(state, i18nextInstance, path));
 
   const form = document.getElementById('urlform');
 
@@ -160,15 +156,13 @@ export default function App() {
 
   posts.addEventListener('click', (e) => {
     if (
-      e.target.dataset.readedLink &&
-      !state.viewedPostsIds.has(e.target.dataset.readedLink)
+      e.target.dataset.readedLink
+      && !state.viewedPostsIds.has(e.target.dataset.readedLink)
     ) {
       state.viewedPostsIds.add(e.target.dataset.readedLink);
-      console.log(e.target.dataset);
     }
     if (e.target.dataset.modalIndex) {
       state.modalPostId = e.target.dataset.modalIndex;
-      console.log(e.target.dataset);
     }
   });
   refreshFeeds(state);

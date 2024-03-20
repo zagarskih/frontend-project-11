@@ -1,2 +1,1 @@
-export const getPostLinkClassName = (isRead) =>
-  (isRead ? ['fw-normal', 'link-secondary'] : ['fw-bold']).join(' ');
+export default (isRead) => (isRead ? ['fw-normal', 'link-secondary'] : ['fw-bold']).join(' ');

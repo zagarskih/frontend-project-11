@@ -1,4 +1,4 @@
-import { getPostLinkClassName } from './utils';
+import getPostLinkClassName from './utils';
 
 const createPost = (state, i18nextInstance) => {
   const { posts } = state;
@@ -24,7 +24,7 @@ const createPost = (state, i18nextInstance) => {
       'justify-content-between',
       'align-items-start',
       'border-0',
-      'border-end-0'
+      'border-end-0',
     );
     ul.append(li);
 
@@ -118,14 +118,7 @@ export default function render(state, i18nextInstance, path) {
   const postEl = document.getElementById('posts-container');
   const feedsEl = document.getElementById('feeds');
   const submitButton = document.getElementById('submitbtn');
-  const modalWindow = document.getElementById('modal-dialog');
-
-  // errorMessage.textContent = i18nextInstance.t(state.textError);
-
-  console.log('render', [...state.viewedPostsIds]);
-
-  const links = window.document.querySelectorAll('a[data-role="post"]');
-  console.log('links', links);
+  const links = document.querySelectorAll('a[data-role="post"]');
 
   links.forEach((link) => {
     const isRead = state.viewedPostsIds.has(link.dataset.id);
