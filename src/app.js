@@ -93,8 +93,8 @@ const addNewFeed = (link, state) => {
         default:
           state.error = error.message;
           break;
-        }
-      });
+      }
+    });
 };
 
 export default function App() {
