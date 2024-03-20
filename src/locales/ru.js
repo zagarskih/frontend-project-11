@@ -4,7 +4,7 @@ export default {
     urlInvalid: 'Ссылка должна быть валидным URL',
     rssExists: 'RSS уже существует',
     networkError: 'Ошибка сети',
-    invalidRss: 'Ресурс не содержит валидный RSS',
+    invalidRSS: 'Ресурс не содержит валидный RSS',
   },
   interface: {
     loadSuccess: 'RSS успешно загружен',

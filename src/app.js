@@ -81,14 +81,20 @@ const addNewFeed = (link, state) => {
       state.feeds = [feed, ...state.feeds];
       state.posts = [...posts, ...state.posts];
     })
-    .catch((e) => {
+    .catch((error) => {
       state.status = 'failed';
-      if (e.code === 'ERR_NETWORK') {
-        state.error = 'errors.networkError';
-      } else {
-        state.error = e.message;
-      }
-    });
+      switch (error.name) {
+        case 'AxiosError':
+          state.error = 'errors.networkError';
+          break;
+        case 'TypeError':
+          state.error = 'errors.invalidRSS';
+          break;
+        default:
+          state.error = error.message;
+          break;
+        }
+      });
 };
 
 export default function App() {
@@ -98,7 +104,6 @@ export default function App() {
     viewedPostsIds: new Set(),
     status: 'filling', // loading, success, failed, filling
     error: '',
-    // isError: false,
     modalPostId: null,
   };
 
