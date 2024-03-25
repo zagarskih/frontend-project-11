@@ -120,7 +120,7 @@ export default function render(state, i18nextInstance, path) {
 
   links.forEach((link) => {
     const isRead = state.viewedPostsIds.has(link.dataset.id);
-    link.className = getPostLinkClassName(isRead);
+    link.className = isRead ? ['fw-normal', 'link-secondary'].join(' ') : ['fw-bold'];
   });
 
   switch (path) {
