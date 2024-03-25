@@ -1,5 +1,3 @@
-import getPostLinkClassName from './utils';
-
 const createPost = (state, i18nextInstance) => {
   const { posts } = state;
   const card = document.createElement('div');
@@ -31,7 +29,7 @@ const createPost = (state, i18nextInstance) => {
     const a = document.createElement('a');
 
     const isRead = state.viewedPostsIds.has(post.id);
-    a.className = getPostLinkClassName(isRead);
+    a.className = isRead ? ['fw-normal', 'link-secondary'].join(' ') : ['fw-bold'];
 
     a.dataset.readedLink = post.id;
     a.dataset.id = post.id;
