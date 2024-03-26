@@ -30,7 +30,7 @@ const makeId = (feed) => ({
 const refreshFeeds = (state) => {
   const promises = state.feeds.map((feed) => {
     const url = `https://allorigins.hexlet.app/get?disableCache=true&url=${encodeURIComponent(
-      feed.link
+      feed.link,
     )}`;
     return axios.get(url, {
       timeout: 10000,
@@ -46,7 +46,7 @@ const refreshFeeds = (state) => {
       const { posts } = { link, ...parse(data) };
       const oldPostsLinks = state.posts.map((post) => post.link);
       const newPosts = posts.filter(
-        (post) => !oldPostsLinks.includes(post.link)
+        (post) => !oldPostsLinks.includes(post.link),
       );
       const newPostsWithId = newPosts.map((post) => ({
         ...post,
@@ -61,7 +61,7 @@ const refreshFeeds = (state) => {
 
 const addNewFeed = (link, state) => {
   const url = `https://allorigins.hexlet.app/get?url=${encodeURIComponent(
-    link
+    link,
   )}`;
   return axios
     .get(url, {
@@ -121,9 +121,7 @@ export default function App() {
       });
     });
 
-  const state = onChange(initialState, (path) =>
-    render(state, i18nextInstance, path)
-  );
+  const state = onChange(initialState, (path) => render(state, i18nextInstance, path));
 
   const form = document.getElementById('urlform');
 
@@ -153,8 +151,8 @@ export default function App() {
 
   posts.addEventListener('click', (e) => {
     if (
-      e.target.dataset.readedLink &&
-      !state.viewedPostsIds.has(e.target.dataset.readedLink)
+      e.target.dataset.readedLink
+      && !state.viewedPostsIds.has(e.target.dataset.readedLink)
     ) {
       state.viewedPostsIds.add(e.target.dataset.readedLink);
     }

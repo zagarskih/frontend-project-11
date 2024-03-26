@@ -22,7 +22,7 @@ const createPost = (state, i18nextInstance) => {
       'justify-content-between',
       'align-items-start',
       'border-0',
-      'border-end-0'
+      'border-end-0',
     );
     ul.append(li);
 
