@@ -1,4 +1,4 @@
-export default (data, feedLink) => {
+export default (data) => {
   const parser = new DOMParser();
   const xmlDoc = parser.parseFromString(data, 'application/xml');
   const titleEl = xmlDoc.getElementsByTagName('title')[0];
@@ -20,7 +20,6 @@ export default (data, feedLink) => {
   return {
     title: feedTitle,
     description: feedDescription,
-    link: feedLink,
     posts,
   };
 };

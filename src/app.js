@@ -4,7 +4,7 @@ import * as yup from 'yup';
 import { uniqueId } from 'lodash';
 import axios from 'axios';
 import render from './render/render';
-import translationRU from './locales/ru';
+import resources from './locales/index.js';
 import parse from './parse';
 
 const validation = (url, links) => {
@@ -28,44 +28,40 @@ const makeId = (feed) => ({
 });
 
 const refreshFeeds = (state) => {
-  if (state?.feeds && state.feeds.length > 0) {
-    const promises = state.feeds.map((feed) => {
-      const url = `https://allorigins.hexlet.app/get?disableCache=true&url=${encodeURIComponent(
-        feed.link,
-      )}`;
-      return axios.get(url, {
-        timeout: 10000,
-        params: {
-          disableCache: true,
-        },
-      });
+  const promises = state.feeds.map((feed) => {
+    const url = `https://allorigins.hexlet.app/get?disableCache=true&url=${encodeURIComponent(
+      feed.link
+    )}`;
+    return axios.get(url, {
+      timeout: 10000,
+      params: {
+        disableCache: true,
+      },
     });
-    Promise.all(promises).then((responses) => {
-      responses.forEach((resp, i) => {
-        const data = resp.data.contents;
-        const { link } = state.feeds[i];
-        const { posts } = parse(data, link);
-        const oldPostsLinks = state.posts.map((post) => post.link);
-        const newPosts = posts.filter(
-          (post) => !oldPostsLinks.includes(post.link),
-        );
-        const newPostsWithId = newPosts.map((post) => ({
-          ...post,
-          id: uniqueId(),
-        }));
-        state.posts = [...newPostsWithId, ...state.posts];
-      });
-      render(state);
-      setTimeout(() => refreshFeeds(state), 5000);
+  });
+  Promise.all(promises).then((responses) => {
+    responses.forEach((resp, i) => {
+      const data = resp.data.contents;
+      const { link } = state.feeds[i];
+      const { posts } = { link, ...parse(data) };
+      const oldPostsLinks = state.posts.map((post) => post.link);
+      const newPosts = posts.filter(
+        (post) => !oldPostsLinks.includes(post.link)
+      );
+      const newPostsWithId = newPosts.map((post) => ({
+        ...post,
+        id: uniqueId(),
+      }));
+      state.posts = [...newPostsWithId, ...state.posts];
     });
-  } else {
+    render(state);
     setTimeout(() => refreshFeeds(state), 5000);
-  }
+  });
 };
 
 const addNewFeed = (link, state) => {
   const url = `https://allorigins.hexlet.app/get?url=${encodeURIComponent(
-    link,
+    link
   )}`;
   return axios
     .get(url, {
@@ -76,7 +72,7 @@ const addNewFeed = (link, state) => {
     })
     .then((response) => {
       const data = response.data.contents;
-      const { posts, ...feed } = makeId(parse(data, link));
+      const { posts, ...feed } = { link, ...makeId(parse(data)) };
       state.status = 'success';
       state.feeds = [feed, ...state.feeds];
       state.posts = [...posts, ...state.posts];
@@ -111,11 +107,7 @@ export default function App() {
   i18nextInstance
     .init({
       lng: 'ru',
-      resources: {
-        ru: {
-          translation: translationRU,
-        },
-      },
+      resources,
     })
     .then(() => {
       yup.setLocale({
@@ -129,7 +121,9 @@ export default function App() {
       });
     });
 
-  const state = onChange(initialState, (path) => render(state, i18nextInstance, path));
+  const state = onChange(initialState, (path) =>
+    render(state, i18nextInstance, path)
+  );
 
   const form = document.getElementById('urlform');
 
@@ -159,8 +153,8 @@ export default function App() {
 
   posts.addEventListener('click', (e) => {
     if (
-      e.target.dataset.readedLink
-      && !state.viewedPostsIds.has(e.target.dataset.readedLink)
+      e.target.dataset.readedLink &&
+      !state.viewedPostsIds.has(e.target.dataset.readedLink)
     ) {
       state.viewedPostsIds.add(e.target.dataset.readedLink);
     }
