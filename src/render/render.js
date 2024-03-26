@@ -22,14 +22,16 @@ const createPost = (state, i18nextInstance) => {
       'justify-content-between',
       'align-items-start',
       'border-0',
-      'border-end-0',
+      'border-end-0'
     );
     ul.append(li);
 
     const a = document.createElement('a');
 
     const isRead = state.viewedPostsIds.has(post.id);
-    a.className = isRead ? ['fw-normal', 'link-secondary'].join(' ') : ['fw-bold'];
+    a.className = isRead
+      ? ['fw-normal', 'link-secondary'].join(' ')
+      : ['fw-bold'];
 
     a.dataset.readedLink = post.id;
     a.dataset.id = post.id;
@@ -120,7 +122,9 @@ export default function render(state, i18nextInstance, path) {
 
   links.forEach((link) => {
     const isRead = state.viewedPostsIds.has(link.dataset.id);
-    link.className = isRead ? ['fw-normal', 'link-secondary'].join(' ') : ['fw-bold'];
+    link.className = isRead
+      ? ['fw-normal', 'link-secondary'].join(' ')
+      : ['fw-bold'];
   });
 
   switch (path) {
