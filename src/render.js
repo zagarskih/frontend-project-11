@@ -1,9 +1,5 @@
 import onChange from 'on-change';
 
-export function observeChanges(state, i18nextInstance) {
-  return onChange(state, (path) => render(state, i18nextInstance, path));
-}
-
 const createPost = (state, i18nextInstance) => {
   const { posts } = state;
   const card = document.createElement('div');
@@ -184,4 +180,8 @@ export default function render(state, i18nextInstance, path) {
     default:
       break;
   }
+}
+
+export function observeChanges(state, i18nextInstance) {
+  return onChange(state, (path) => render(state, i18nextInstance, path));
 }
