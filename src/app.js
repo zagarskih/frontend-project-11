@@ -1,11 +1,11 @@
-import onChange from 'on-change';
 import i18next from 'i18next';
 import * as yup from 'yup';
 import { uniqueId } from 'lodash';
 import axios from 'axios';
-import render from './render/render';
+import render from './render';
 import resources from './locales/index.js';
 import parse from './parse';
+import { observeChanges } from './render';
 
 const validation = (url, links) => {
   const schema = yup
@@ -121,7 +121,7 @@ export default function App() {
       });
     });
 
-  const state = onChange(initialState, (path) => render(state, i18nextInstance, path));
+  const state = observeChanges(initialState, i18nextInstance);
 
   const form = document.getElementById('urlform');
 
@@ -150,11 +150,10 @@ export default function App() {
   const posts = document.getElementById('content');
 
   posts.addEventListener('click', (e) => {
-    if (
-      e.target.dataset.readedLink
-      && !state.viewedPostsIds.has(e.target.dataset.readedLink)
-    ) {
-      state.viewedPostsIds.add(e.target.dataset.readedLink);
+    const postId = e.target.dataset.readedLink;
+    if (!postId) return;
+    if (!state.viewedPostsIds.has(postId)) {
+      state.viewedPostsIds.add(postId);
     }
     if (e.target.dataset.modalIndex) {
       state.modalPostId = e.target.dataset.modalIndex;
