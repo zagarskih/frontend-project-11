@@ -2,10 +2,9 @@ import i18next from 'i18next';
 import * as yup from 'yup';
 import { uniqueId } from 'lodash';
 import axios from 'axios';
-import render from './render';
+import render, { observeChanges } from './render';
 import resources from './locales/index.js';
 import parse from './parse';
-import { observeChanges } from './render';
 
 const validation = (url, links) => {
   const schema = yup
